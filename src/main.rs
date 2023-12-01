@@ -1,10 +1,6 @@
-mod day1 {
-    pub fn part_1(_input: &str) -> u64 {
-        64
-    }
-}
+mod day1;
 
 aoc_main::main! {
     year 2023;
-    day1 => part_1;
+    day1 => part_1, part_2;
 }
