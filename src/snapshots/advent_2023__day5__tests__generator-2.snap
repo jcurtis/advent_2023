@@ -1,0 +1,154 @@
+---
+source: src/day5.rs
+expression: "&sorted_map"
+---
+IntoIter(
+    [
+        (
+            Mapping {
+                from: "fertilizer",
+                to: "water",
+            },
+            [
+                Map {
+                    destination_start: 49,
+                    source_start: 53,
+                    range_length: 8,
+                },
+                Map {
+                    destination_start: 0,
+                    source_start: 11,
+                    range_length: 42,
+                },
+                Map {
+                    destination_start: 42,
+                    source_start: 0,
+                    range_length: 7,
+                },
+                Map {
+                    destination_start: 57,
+                    source_start: 7,
+                    range_length: 4,
+                },
+            ],
+        ),
+        (
+            Mapping {
+                from: "humidity",
+                to: "location",
+            },
+            [
+                Map {
+                    destination_start: 60,
+                    source_start: 56,
+                    range_length: 37,
+                },
+                Map {
+                    destination_start: 56,
+                    source_start: 93,
+                    range_length: 4,
+                },
+            ],
+        ),
+        (
+            Mapping {
+                from: "light",
+                to: "temperature",
+            },
+            [
+                Map {
+                    destination_start: 45,
+                    source_start: 77,
+                    range_length: 23,
+                },
+                Map {
+                    destination_start: 81,
+                    source_start: 45,
+                    range_length: 19,
+                },
+                Map {
+                    destination_start: 68,
+                    source_start: 64,
+                    range_length: 13,
+                },
+            ],
+        ),
+        (
+            Mapping {
+                from: "seed",
+                to: "soil",
+            },
+            [
+                Map {
+                    destination_start: 50,
+                    source_start: 98,
+                    range_length: 2,
+                },
+                Map {
+                    destination_start: 52,
+                    source_start: 50,
+                    range_length: 48,
+                },
+            ],
+        ),
+        (
+            Mapping {
+                from: "soil",
+                to: "fertilizer",
+            },
+            [
+                Map {
+                    destination_start: 0,
+                    source_start: 15,
+                    range_length: 37,
+                },
+                Map {
+                    destination_start: 37,
+                    source_start: 52,
+                    range_length: 2,
+                },
+                Map {
+                    destination_start: 39,
+                    source_start: 0,
+                    range_length: 15,
+                },
+            ],
+        ),
+        (
+            Mapping {
+                from: "temperature",
+                to: "humidity",
+            },
+            [
+                Map {
+                    destination_start: 0,
+                    source_start: 69,
+                    range_length: 1,
+                },
+                Map {
+                    destination_start: 1,
+                    source_start: 0,
+                    range_length: 69,
+                },
+            ],
+        ),
+        (
+            Mapping {
+                from: "water",
+                to: "light",
+            },
+            [
+                Map {
+                    destination_start: 88,
+                    source_start: 18,
+                    range_length: 7,
+                },
+                Map {
+                    destination_start: 18,
+                    source_start: 25,
+                    range_length: 70,
+                },
+            ],
+        ),
+    ],
+)
