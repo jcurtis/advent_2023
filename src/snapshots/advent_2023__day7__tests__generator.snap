@@ -1,0 +1,66 @@
+---
+source: src/day7.rs
+expression: generator(&INPUT)
+---
+[
+    Play {
+        hand: Hand(
+            [
+                3,
+                2,
+                10,
+                3,
+                13,
+            ],
+        ),
+        bid: 765,
+    },
+    Play {
+        hand: Hand(
+            [
+                10,
+                5,
+                5,
+                11,
+                5,
+            ],
+        ),
+        bid: 684,
+    },
+    Play {
+        hand: Hand(
+            [
+                13,
+                13,
+                6,
+                7,
+                7,
+            ],
+        ),
+        bid: 28,
+    },
+    Play {
+        hand: Hand(
+            [
+                13,
+                10,
+                11,
+                11,
+                10,
+            ],
+        ),
+        bid: 220,
+    },
+    Play {
+        hand: Hand(
+            [
+                12,
+                12,
+                12,
+                11,
+                14,
+            ],
+        ),
+        bid: 483,
+    },
+]
