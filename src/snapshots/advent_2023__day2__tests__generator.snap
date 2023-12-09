@@ -1,6 +1,6 @@
 ---
 source: src/day2.rs
-expression: generator(input)
+expression: generator(&INPUT)
 ---
 [
     Game {
