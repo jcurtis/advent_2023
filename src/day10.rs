@@ -1,5 +1,5 @@
 use itertools::Itertools;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 type Input = HashMap<(usize, usize), char>;
 
@@ -115,10 +115,10 @@ fn find_start_dir(input: &Input, &(x, y): &(usize, usize)) -> ((usize, usize), (
 }
 
 pub fn part_1(input: &Input) -> usize {
-    let start = find_start(&input);
-    let (mut dir_1, mut dir_2) = find_start_dir(&input, start);
-    let mut prev_pos_1 = start.clone();
-    let mut prev_pos_2 = start.clone();
+    let start = find_start(input);
+    let (mut dir_1, mut dir_2) = find_start_dir(input, start);
+    let mut prev_pos_1 = *start;
+    let mut prev_pos_2 = *start;
     let mut count = 1;
 
     while dir_1 != dir_2 {
@@ -129,8 +129,8 @@ pub fn part_1(input: &Input) -> usize {
         let pipe_1 = input[&dir_1];
         let pipe_2 = input[&dir_2];
 
-        let new_dir_1 = find_dir(&input, &dir_1, &prev_pos_1, pipe_1);
-        let new_dir_2 = find_dir(&input, &dir_2, &prev_pos_2, pipe_2);
+        let new_dir_1 = find_dir(input, &dir_1, &prev_pos_1, pipe_1);
+        let new_dir_2 = find_dir(input, &dir_2, &prev_pos_2, pipe_2);
 
         prev_pos_1 = dir_1;
         prev_pos_2 = dir_2;
@@ -152,6 +152,107 @@ fn find_start(input: &Input) -> &(usize, usize) {
             _ => None,
         })
         .unwrap()
+}
+
+fn build_path(input: &Input) -> HashSet<(usize, usize)> {
+    let start = find_start(input);
+
+    let mut prev_pos = *start;
+    let (mut pos, _) = find_start_dir(input, start);
+
+    let mut path = HashSet::new();
+    path.insert(prev_pos);
+    path.insert(pos);
+    let mut count = 0;
+
+    while &pos != start {
+        count += 1;
+        if count > 100000 {
+            unreachable!("cut early");
+        }
+
+        let new_pos = find_dir(input, &pos, &prev_pos, input[&pos]);
+        prev_pos = pos;
+        pos = new_pos;
+        path.insert(pos);
+    }
+
+    path
+}
+
+fn ray_cast(row: &[char]) -> usize {
+    let mut count = 0;
+    let mut iter = row.iter();
+
+    // println!("for row {:?}", &row);
+    while let Some(pipe) = iter.next() {
+        // println!("take {pipe}");
+        match pipe {
+            '|' => count += 1,
+            'L' => {
+                for &next_pipe in iter.by_ref() {
+                    if next_pipe == '7' {
+                        count += 1;
+                        break;
+                    } else if next_pipe == 'J' {
+                        break;
+                    }
+                }
+            }
+            'F' => {
+                for &next_pipe in iter.by_ref() {
+                    if next_pipe == 'J' {
+                        count += 1;
+                        break;
+                    } else if next_pipe == '7' {
+                        break;
+                    }
+                }
+            }
+            _ => {}
+        }
+    }
+
+    count
+}
+
+// too high 465
+pub fn part_2(input: &Input) -> usize {
+    let path: HashSet<(usize, usize)> = build_path(input);
+
+    // Find bounds
+    let (left, right): (Vec<usize>, Vec<usize>) = path.iter().cloned().unzip();
+    let bounds_x = *left.iter().max().unwrap();
+    let bounds_y = *right.iter().max().unwrap();
+
+    // Find points that need to be tested
+    let mut count = 0;
+    for x in 0..bounds_x {
+        for y in 0..bounds_y {
+            if !path.contains(&(x, y)) {
+                // println!("testing ({x}, {y})");
+                // empty point (x, y) - is in inside?
+                let row = path
+                    .iter()
+                    .filter(|&tile| tile.0 < x && tile.1 == y)
+                    .sorted_by(|&a, &b| a.0.cmp(&b.0))
+                    .map(|&tile| input[&tile])
+                    .collect_vec();
+                if !row.is_empty() {
+                    let cross_count = ray_cast(&row);
+                    println!(
+                        "testing ({x}, {y}) {:?} - counted {cross_count}",
+                        &row.iter().cloned().collect::<String>()
+                    );
+
+                    if cross_count % 2 == 1 {
+                        count += 1;
+                    }
+                }
+            }
+        }
+    }
+    count
 }
 
 #[cfg(test)]
@@ -201,5 +302,62 @@ LJ.LJ";
 
         let input = generator(&INPUT_COMPLEX);
         assert_eq!(part_1(&input), 8);
+    }
+
+    #[test]
+    fn test_part_2() {
+        let input = "...........
+.S-------7.
+.|F-----7|.
+.||.....||.
+.||.....||.
+.|L-7.F-J|.
+.|..|.|..|.
+.L--J.L--J.
+...........";
+        println!("\n{input}");
+        let input = generator(&input);
+        assert_eq!(part_2(&input), 4);
+
+        let input = "...........
+.S------7.
+.|F----7|.
+.||....||.
+.||....||.
+.|L-7F-J|.
+.|..||..|.
+.L--JL--J.
+..........";
+        println!("\n{input}");
+        let input = generator(&input);
+        assert_eq!(part_2(&input), 4);
+
+        let input = ".F----7F7F7F7F-7....
+.|F--7||||||||FJ....
+.||.FJ||||||||L7....
+FJL7L7LJLJ||LJ.L-7..
+L--J.L7...LJS7F-7L7.
+....F-J..F7FJ|L7L7L7
+....L7.F7||L7|.L7L7|
+.....|FJLJ|FJ|F7|.LJ
+....FJL-7.||.||||...
+....L---J.LJ.LJLJ...";
+        println!("\n{input}");
+        let input = generator(&input);
+        assert_eq!(part_2(&input), 8);
+
+        let input = "FF7FSF7F7F7F7F7F---7
+L|LJ||||||||||||F--J
+FL-7LJLJ||||||LJL-77
+F--JF--7||LJLJ7F7FJ-
+L---JF-JLJ.||-FJLJJ7
+|F|F-JF---7F7-L7L|7|
+|FFJF7L7F-JF7|JL---7
+7-L-JL7||F7|L7F-7F7|
+L.L7LFJ|||||FJL7||LJ
+L7JLJL-JLJLJL--JLJ.L";
+        println!("\n{input}");
+        let input = generator(&input);
+        assert_eq!(part_2(&input), 10);
     }
 }
